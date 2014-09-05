@@ -14,7 +14,7 @@
    height="256"
    id="svg2"
    version="1.1"
-   inkscape:version="0.48.4 r9939"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="logo.svg"
    inkscape:export-filename="D:\Work\openpath\png\logo_128.png"
    inkscape:export-xdpi="45"
@@ -295,11 +295,11 @@
     <linearGradient
        id="linearGradient4214-7">
       <stop
-         style="stop-color:#620000;stop-opacity:1;"
+         style="stop-color:#7da0cf;stop-opacity:1;"
          offset="0"
          id="stop4216-4" />
       <stop
-         style="stop-color:#ba5600;stop-opacity:1;"
+         style="stop-color:#0b74b4;stop-opacity:1;"
          offset="1"
          id="stop4218-0" />
     </linearGradient>
@@ -315,11 +315,11 @@
     <linearGradient
        id="linearGradient4222-4">
       <stop
-         style="stop-color:#4e0000;stop-opacity:1;"
+         style="stop-color:#b0f6ff;stop-opacity:1;"
          offset="0"
          id="stop4224-8" />
       <stop
-         style="stop-color:#d04732;stop-opacity:1;"
+         style="stop-color:#0c5586;stop-opacity:1;"
          offset="1"
          id="stop4226-8" />
     </linearGradient>
@@ -399,14 +399,6 @@
          d="m 544,48 a 288,80 0 1 1 -576,0 288,80 0 1 1 576,0 z"
          transform="translate(0,796.36218)" />
     </clipPath>
-    <filter
-       inkscape:collect="always"
-       id="filter4023">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="3.16"
-         id="feGaussianBlur4025" />
-    </filter>
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient4214-7-4"
@@ -438,14 +430,6 @@
          offset="1"
          id="stop4218-0-5-3" />
     </linearGradient>
-    <filter
-       inkscape:collect="always"
-       id="filter4066">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="2.77"
-         id="feGaussianBlur4068" />
-    </filter>
     <linearGradient
        gradientTransform="translate(0,-2.6171874e-6)"
        inkscape:collect="always"
@@ -467,28 +451,6 @@
          offset="1"
          id="stop4218-0-57" />
     </linearGradient>
-    <linearGradient
-       inkscape:collect="always"
-       xlink:href="#linearGradient4214-7-4"
-       id="linearGradient4104"
-       gradientUnits="userSpaceOnUse"
-       gradientTransform="translate(0,-10e-6)"
-       x1="256"
-       y1="924.36218"
-       x2="256"
-       y2="828.36218" />
-    <filter
-       inkscape:collect="always"
-       id="filter4115"
-       x="-0.027932773"
-       width="1.0558655"
-       y="-0.17046154"
-       height="1.3409231">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="5.54"
-         id="feGaussianBlur4117" />
-    </filter>
     <filter
        inkscape:collect="always"
        id="filter4119">
@@ -506,15 +468,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994948"
-     inkscape:cx="260.69808"
-     inkscape:cy="3.0740632"
+     inkscape:cx="324.50787"
+     inkscape:cy="1.5121169"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g3853"
      showgrid="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1015"
-     inkscape:window-x="-4"
-     inkscape:window-y="-4"
+     inkscape:window-width="1231"
+     inkscape:window-height="756"
+     inkscape:window-x="49"
+     inkscape:window-y="0"
      inkscape:window-maximized="1">
     <inkscape:grid
        type="xygrid"
@@ -589,20 +551,16 @@
        y="846.36218"
        rx="20"
        ry="20" />
-    <path
-       inkscape:connector-curvature="0"
-       style="fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter4115)"
-       mask="none"
-       clip-path="none"
-       d="m 38,846.36218 c -11.08,0 -20,8.92 -20,20 l 0,23.0625 c 51.857074,21.09419 139.10485,34.9375 238,34.9375 98.89515,0 186.14293,-13.84331 238,-34.9375 l 0,-23.0625 c 0,-11.08 -8.92,-20 -20,-20 l -436,0 z"
-       id="rect4165-8-1-2" />
-    <path
-       style="fill:url(#linearGradient4104);fill-opacity:1;stroke:none"
-       mask="none"
-       clip-path="none"
-       d="m 38,846.36218 c -11.08,0 -20,8.92 -20,20 l 0,23.0625 c 51.857074,21.09419 139.10485,34.9375 238,34.9375 98.89515,0 186.14293,-13.84331 238,-34.9375 l 0,-23.0625 c 0,-11.08 -8.92,-20 -20,-20 l -436,0 z"
-       id="rect4165-8-1"
-       inkscape:connector-curvature="0" />
+    <g
+       id="g3853"
+       style="fill:#ffffff;fill-opacity:0.50480771"
+       transform="matrix(1.0258648,0,0,1.0258648,-87.94842,-23.908446)">
+      <path
+         style="fill:#333333;fill-opacity:0.50480772;fill-rule:evenodd;stroke:none"
+         d="m 254.49106,874.37387 c -10.59657,0.53369 -18.97789,9.2494 -18.97789,19.98314 l 0,60.01035 c 0,11.08 8.9336,19.98314 20.0136,19.98314 l 119.99023,0 c 11.08,0 20.0136,-8.90314 20.0136,-19.98314 l 0,-21.01885 11.97161,6.9149 27.53774,15.90121 0,-31.80243 0,-31.80244 -27.53774,15.90122 -11.97161,6.9149 0,-21.01886 c 0,-11.08 -8.9336,-19.98314 -20.0136,-19.98314 l -119.99023,0 c -0.34625,0 -0.69389,-0.0172 -1.03571,0 z"
+         id="rect3849"
+         inkscape:connector-curvature="0" />
+    </g>
     <text
        xml:space="preserve"
        style="font-size:127.81983948px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:end;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;opacity:0.8;fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter4192);font-family:advent;-inkscape-font-specification:advent Light"
@@ -614,7 +572,7 @@
          x="256.78412"
          y="959.13892"
          style="font-size:90px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:advent;-inkscape-font-specification:advent Light"
-         id="tspan3798-8-7">OpenStash</tspan></text>
+         id="tspan3798-8-7">OpenJib</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:127.81983948px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:end;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:end;fill:#f9f9f9;fill-opacity:1;stroke:none;font-family:advent;-inkscape-font-specification:advent Light"
@@ -626,6 +584,6 @@
          x="256.78412"
          y="955.13892"
          style="font-size:90px;font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;text-align:center;line-height:100%;writing-mode:lr-tb;text-anchor:middle;fill:#f9f9f9;fill-opacity:1;stroke:none;font-family:advent;-inkscape-font-specification:advent Light"
-         id="tspan3798-8">OpenStash</tspan></text>
+         id="tspan3798-8">OpenJib</tspan></text>
   </g>
 </svg>
