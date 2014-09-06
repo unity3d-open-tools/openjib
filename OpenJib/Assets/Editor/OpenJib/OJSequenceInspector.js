@@ -12,13 +12,16 @@ public class OJSequenceInspector extends Editor {
 		var currentTime : float = sequence.playing ? sequence.currentTime : currentEditorTime;
 
 		sequence.cam = EditorGUILayout.ObjectField ( "Camera", sequence.cam, typeof ( Camera ), true ) as Camera;
+		sequence.eventHandler = EditorGUILayout.ObjectField ( "Event handler", sequence.eventHandler, typeof ( GameObject ), true ) as GameObject;
 
 		if ( !sequence.cam ) {
 			EditorGUILayout.LabelField ( "Please link a camera first" );
 			return;
 		}
 
-		// Controls
+		EditorGUILayout.Space ();
+		
+		// Playback controls
 		EditorGUILayout.BeginHorizontal ();
 		
 		if ( sequence.playing ) {
@@ -41,6 +44,7 @@ public class OJSequenceInspector extends Editor {
 		EditorGUILayout.EndHorizontal ();
 
 		sequence.autoPlay = EditorGUILayout.Toggle ( "Autoplay", sequence.autoPlay );
+		sequence.rotateAlongCurve = EditorGUILayout.Toggle ( "Rotate along curve", sequence.rotateAlongCurve );
 
 		EditorGUILayout.Space ();
 
@@ -97,47 +101,58 @@ public class OJSequenceInspector extends Editor {
 
 			EditorGUILayout.Space ();
 
-			// Properties
-			kf = sequence.keyframes [ currentEditorKeyframe ];
+			if ( currentEditorKeyframe > -1 && currentEditorKeyframe < sequence.keyframes.Count ) { 
+				kf = sequence.keyframes [ currentEditorKeyframe ];
+				
+				kf.stop = EditorGUILayout.Toggle ( "Stop", kf.stop );
+				kf.time = EditorGUILayout.Slider ( "Time", kf.time, 0, sequence.length );
+				
+				EditorGUILayout.Space ();
+				
+				// Event
+				EditorGUILayout.LabelField ( "Event", EditorStyles.boldLabel );
+				kf.event.message = EditorGUILayout.TextField ( "Message", kf.event.message );
+				kf.event.argument = EditorGUILayout.TextField ( "Argument", kf.event.argument );
 
-			// Transform
-			EditorGUILayout.BeginHorizontal ();
-			EditorGUILayout.LabelField ( "Transform", EditorStyles.boldLabel );
-			if ( GUILayout.Button ( "Copy from scene", GUILayout.Width ( 120 ) ) ) {
-				kf.position = sequence.cam.transform.localPosition;
-				kf.rotation = sequence.cam.transform.localEulerAngles;
-			}
-			EditorGUILayout.EndHorizontal ();
-			
-			kf.position = EditorGUILayout.Vector3Field ( "Position", kf.position );
-			kf.rotation = EditorGUILayout.Vector3Field ( "Rotation", kf.rotation );
-			
-			// Curve
-			EditorGUILayout.Space ();
-			EditorGUILayout.LabelField ( "Curve", EditorStyles.boldLabel );
-			kf.curve.symmetrical = EditorGUILayout.Toggle ( "Symmetrical", kf.curve.symmetrical );
-			kf.curve.before = EditorGUILayout.Vector3Field ( "Before", kf.curve.before );
-			kf.curve.after = EditorGUILayout.Vector3Field ( "After", kf.curve.after );
+				EditorGUILayout.Space ();
+				
+				// Transform
+				EditorGUILayout.BeginHorizontal ();
+				EditorGUILayout.LabelField ( "Transform", EditorStyles.boldLabel );
+				if ( GUILayout.Button ( "Copy from scene", GUILayout.Width ( 120 ) ) ) {
+					kf.position = sequence.cam.transform.localPosition;
+					kf.rotation = sequence.cam.transform.localEulerAngles;
+				}
+				EditorGUILayout.EndHorizontal ();
+				
+				kf.position = EditorGUILayout.Vector3Field ( "Position", kf.position );
+				kf.rotation = EditorGUILayout.Vector3Field ( "Rotation", kf.rotation );
+				
+				// Curve
+				EditorGUILayout.Space ();
+				EditorGUILayout.LabelField ( "Curve", EditorStyles.boldLabel );
+				kf.curve.symmetrical = EditorGUILayout.Toggle ( "Symmetrical", kf.curve.symmetrical );
+				kf.curve.before = EditorGUILayout.Vector3Field ( "Before", kf.curve.before );
+				kf.curve.after = EditorGUILayout.Vector3Field ( "After", kf.curve.after );
 
-			EditorGUILayout.Space ();
+				EditorGUILayout.Space ();
 			
-			EditorGUILayout.LabelField ( "Properties", EditorStyles.boldLabel );
-			kf.fov = EditorGUILayout.IntField ( "FOV", kf.fov );
-			kf.brightness = EditorGUILayout.FloatField ( "Brightness", kf.brightness );
-			kf.stop = EditorGUILayout.Toggle ( "Stop", kf.stop );
-			kf.time = EditorGUILayout.Slider ( "Time", kf.time, 0, sequence.length );
-			
-			// Actions
-			EditorGUILayout.Space ();
+				// Properties	
+				EditorGUILayout.LabelField ( "Properties", EditorStyles.boldLabel );
+				kf.fov = EditorGUILayout.IntField ( "FOV", kf.fov );
+				kf.brightness = EditorGUILayout.FloatField ( "Brightness", kf.brightness );
+				
+				// Actions
+				EditorGUILayout.Space ();
 
-			if ( GUILayout.Button ( "Remove" ) ) {
-				sequence.RemoveKeyframe ( currentEditorKeyframe );
+				if ( GUILayout.Button ( "Remove" ) ) {
+					sequence.RemoveKeyframe ( currentEditorKeyframe );
+				}
 			}
 		}
 
 		// Make sure the list of keyframes is sorted by time
 		if ( !sequence.playing && GUI.changed ) {
-			sequence.SortKeyframes ();
 			sequence.SetTime ( currentTime );
 		}
 

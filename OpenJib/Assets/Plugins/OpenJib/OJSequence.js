@@ -9,6 +9,32 @@ public class OJKeyframe {
 		public var after : Vector3;
 	}
 
+	public class Event {
+		public var action : System.Action;
+		public var message : String;
+		public var argument : String;
+		public var fired : boolean = false;
+
+		public function Fire ( eventHandler : GameObject ) {
+			if ( !Application.isPlaying ) { return; }
+			
+			if ( action ) {
+				action ();
+			
+			} else if ( eventHandler && !String.IsNullOrEmpty ( message ) ) {
+				if ( !String.IsNullOrEmpty ( argument ) ) {
+					eventHandler.SendMessage ( message, argument, SendMessageOptions.DontRequireReceiver );
+
+				} else {
+					eventHandler.SendMessage ( message, SendMessageOptions.DontRequireReceiver );
+
+				}
+			}
+
+			fired = true;
+		}	
+	}
+
 	public var position : Vector3;
 	public var rotation : Vector3;
 	public var curve : Curve = new Curve ();
@@ -16,6 +42,7 @@ public class OJKeyframe {
 	public var brightness : float = 1;
 	public var time : float = 0;
 	public var stop : boolean;
+	public var event : Event = new Event ();
 
 	public function Focus ( cam : Transform, target : Transform ) {
 		var lookPos : Vector3 = target.position - cam.position;
@@ -45,11 +72,13 @@ public class OJSequence extends MonoBehaviour {
 	}
 
 	public var autoPlay : boolean = false;	
+	public var rotateAlongCurve : boolean = false;
 	public var keyframes : List.< OJKeyframe > = new List.< OJKeyframe > (); 
 	public var cam : Camera;
 	public var length : float = 30;
 	public var currentTime : float;
 	public var playing : boolean = false;
+	public var eventHandler : GameObject;
 
 	private function get isReady () : boolean {
 		return Application.isPlaying && cam != null && keyframes.Count > 0;
@@ -80,6 +109,10 @@ public class OJSequence extends MonoBehaviour {
 		if ( isReady ) {
 			cam.enabled = true;
 			playing = true;
+			
+			for ( var kf : OJKeyframe in keyframes ) {
+				kf.event.fired = false;
+			}
 		}
 	}
 
@@ -90,6 +123,10 @@ public class OJSequence extends MonoBehaviour {
 	
 		cam.transform.localPosition = kf.position;
 		cam.transform.localEulerAngles = kf.rotation;
+
+		for ( kf in keyframes ) {
+			kf.event.fired = false;
+		}
 	}
 
 	public function Start () {
@@ -120,7 +157,14 @@ public class OJSequence extends MonoBehaviour {
 
 	public function LerpCamera ( kf1 : OJKeyframe, kf2 : OJKeyframe, t : float ) {
 		cam.transform.localPosition = CalculateBezierPoint ( t, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position );
-		cam.transform.localRotation = Quaternion.Lerp ( Quaternion.Euler ( kf1.rotation ), Quaternion.Euler ( kf2.rotation ), t ); 
+		
+		if ( rotateAlongCurve ) {
+			cam.transform.LookAt ( CalculateBezierPoint ( t + 0.05, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position ) );
+
+		} else {
+			cam.transform.localRotation = Quaternion.Lerp ( Quaternion.Euler ( kf1.rotation ), Quaternion.Euler ( kf2.rotation ), t ); 
+		
+		}
 	}	
 
 	public function SetCamera ( kf : OJKeyframe ) {
@@ -139,7 +183,6 @@ public class OJSequence extends MonoBehaviour {
 		// Create new keyframe
 		var kf : OJKeyframe = new OJKeyframe ();
 		var closest : KeyframePair = FindClosestKeyframes ();
-		
 		
 		if ( closest.kf1 && closest.kf2 ) {
 			var cursor : float = GetCursorPosition ( closest.kf1, closest.kf2 );
@@ -200,6 +243,11 @@ public class OJSequence extends MonoBehaviour {
 
 		var closest : KeyframePair = FindClosestKeyframes ();
 	
+		// Fire event
+		if ( Application.isPlaying && playing && closest.kf1 && !closest.kf1.event.fired ) {
+			closest.kf1.event.Fire ( eventHandler );
+		}
+
 		if ( closest.kf1 ) {
 			if ( closest.kf2 ) { 
 				LerpCamera ( closest.kf1, closest.kf2, GetCursorPosition ( closest.kf1, closest.kf2 ) ); 
@@ -215,7 +263,7 @@ public class OJSequence extends MonoBehaviour {
 		if ( playing ) {
 			currentTime += Time.deltaTime;
 
-			if ( currentTime >= length ) {
+			if ( currentTime > length ) {
 				playing = false;
 			
 			} else {			
