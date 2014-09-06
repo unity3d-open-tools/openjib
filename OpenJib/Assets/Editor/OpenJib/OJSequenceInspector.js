@@ -139,7 +139,7 @@ public class OJSequenceInspector extends Editor {
 			
 				// Properties	
 				EditorGUILayout.LabelField ( "Properties", EditorStyles.boldLabel );
-				kf.fov = EditorGUILayout.IntField ( "FOV", kf.fov );
+				kf.fov = EditorGUILayout.Slider ( "FOV", kf.fov, 1, 179 );
 				kf.brightness = EditorGUILayout.FloatField ( "Brightness", kf.brightness );
 				
 				// Actions

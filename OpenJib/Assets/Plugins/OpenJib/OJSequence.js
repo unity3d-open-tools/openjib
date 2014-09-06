@@ -35,14 +35,14 @@ public class OJKeyframe {
 		}	
 	}
 
+	public var time : float = 0;
+	public var stop : boolean;
+	public var event : Event = new Event ();
 	public var position : Vector3;
 	public var rotation : Vector3;
 	public var curve : Curve = new Curve ();
 	public var fov : int = 60;
 	public var brightness : float = 1;
-	public var time : float = 0;
-	public var stop : boolean;
-	public var event : Event = new Event ();
 
 	public function Focus ( cam : Transform, target : Transform ) {
 		var lookPos : Vector3 = target.position - cam.position;
@@ -156,8 +156,9 @@ public class OJSequence extends MonoBehaviour {
 	}	
 
 	public function LerpCamera ( kf1 : OJKeyframe, kf2 : OJKeyframe, t : float ) {
+		cam.fieldOfView = Mathf.Lerp ( kf1.fov, kf2.fov, t );
 		cam.transform.localPosition = CalculateBezierPoint ( t, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position );
-		
+
 		if ( rotateAlongCurve ) {
 			cam.transform.LookAt ( CalculateBezierPoint ( t + 0.05, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position ) );
 
@@ -168,6 +169,7 @@ public class OJSequence extends MonoBehaviour {
 	}	
 
 	public function SetCamera ( kf : OJKeyframe ) {
+		cam.fieldOfView = kf.fov;
 		cam.transform.localPosition = kf.position;
 		cam.transform.localRotation = Quaternion.Euler ( kf.rotation );
 	}
