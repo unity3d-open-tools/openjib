@@ -120,7 +120,7 @@ public class OJSequenceInspector extends Editor {
 				EditorGUILayout.BeginHorizontal ();
 				EditorGUILayout.LabelField ( "Transform", EditorStyles.boldLabel );
 				if ( GUILayout.Button ( "Copy from scene", GUILayout.Width ( 120 ) ) ) {
-					kf.position = sequence.cam.transform.localPosition;
+					kf.position = sequence.cam.transform.position - sequence.transform.position;
 					kf.rotation = sequence.cam.transform.localEulerAngles;
 				}
 				EditorGUILayout.EndHorizontal ();
@@ -161,13 +161,13 @@ public class OJSequenceInspector extends Editor {
 		}
 	}
 
-	private function DrawHandles ( kf : OJKeyframe ) {
+	private function DrawHandles ( sequence : OJSequence, kf : OJKeyframe ) {
 		if ( kf.curve.before != Vector3.zero ) {
-			Handles.DrawLine ( kf.position, kf.position + kf.curve.before );
+			Handles.DrawLine ( sequence.transform.position + kf.position, sequence.transform.position + kf.position + kf.curve.before );
 		}
 		
 		if ( kf.curve.after != Vector3.zero ) {
-			Handles.DrawLine ( kf.position, kf.position + kf.curve.after );
+			Handles.DrawLine ( sequence.transform.position + kf.position, sequence.transform.position + kf.position + kf.curve.after );
 		}
 	}
 
@@ -182,8 +182,8 @@ public class OJSequenceInspector extends Editor {
 				var kf2 : OJKeyframe = sequence.keyframes [ k ];
 
 				for ( var t : float = 0.05; t <= 1.05; t += 0.05 ) {
-					var p1 : Vector3 = OJSequence.CalculateBezierPoint ( t - 0.05, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position );
-					var p2 : Vector3 = OJSequence.CalculateBezierPoint ( t, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position );
+					var p1 : Vector3 = OJSequence.CalculateBezierPoint ( t - 0.05, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
+					var p2 : Vector3 = OJSequence.CalculateBezierPoint ( t, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
 					
 					Handles.DrawLine ( p1, p2 );
 				}
@@ -193,13 +193,13 @@ public class OJSequenceInspector extends Editor {
 		var kf : OJKeyframe = sequence.keyframes [ currentEditorKeyframe ];
 		
 		Handles.color = new Color ( 0, 1, 1, 0.5 );
-		DrawHandles ( kf );
+		DrawHandles ( sequence, kf );
 	
 		var before : Vector3 = kf.curve.before;
-	       	kf.curve.before = Handles.PositionHandle ( kf.position + kf.curve.before, Quaternion.Euler ( Vector3.zero ) ) - kf.position;
+	       	kf.curve.before = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.before, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
 		
 		var after : Vector3 = kf.curve.after;
-		kf.curve.after = Handles.PositionHandle ( kf.position + kf.curve.after, Quaternion.Euler ( Vector3.zero ) ) - kf.position;
+		kf.curve.after = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.after, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
 	
 		if ( kf.curve.symmetrical ) {	
 			if ( before != kf.curve.before ) {

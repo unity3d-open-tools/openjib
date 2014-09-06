@@ -121,7 +121,7 @@ public class OJSequence extends MonoBehaviour {
 
 		var kf : OJKeyframe = keyframes [ 0 ];
 	
-		cam.transform.localPosition = kf.position;
+		cam.transform.position = transform.position + kf.position;
 		cam.transform.localEulerAngles = kf.rotation;
 
 		for ( kf in keyframes ) {
@@ -157,10 +157,10 @@ public class OJSequence extends MonoBehaviour {
 
 	public function LerpCamera ( kf1 : OJKeyframe, kf2 : OJKeyframe, t : float ) {
 		cam.fieldOfView = Mathf.Lerp ( kf1.fov, kf2.fov, t );
-		cam.transform.localPosition = CalculateBezierPoint ( t, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position );
+		cam.transform.position = CalculateBezierPoint ( t, transform.position + kf1.position, transform.position + kf1.position + kf1.curve.after, transform.position + kf2.position + kf2.curve.before, transform.position + kf2.position );
 
 		if ( rotateAlongCurve ) {
-			cam.transform.LookAt ( CalculateBezierPoint ( t + 0.05, kf1.position, kf1.position + kf1.curve.after, kf2.position + kf2.curve.before, kf2.position ) );
+			cam.transform.LookAt ( CalculateBezierPoint ( t + 0.05, transform.position + kf1.position, transform.position + kf1.position + kf1.curve.after, transform.position + kf2.position + kf2.curve.before, transform.position + kf2.position ) );
 
 		} else {
 			cam.transform.localRotation = Quaternion.Lerp ( Quaternion.Euler ( kf1.rotation ), Quaternion.Euler ( kf2.rotation ), t ); 
@@ -170,7 +170,7 @@ public class OJSequence extends MonoBehaviour {
 
 	public function SetCamera ( kf : OJKeyframe ) {
 		cam.fieldOfView = kf.fov;
-		cam.transform.localPosition = kf.position;
+		cam.transform.position = transform.position + kf.position;
 		cam.transform.localRotation = Quaternion.Euler ( kf.rotation );
 	}
 
