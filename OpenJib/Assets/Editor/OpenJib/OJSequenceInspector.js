@@ -59,6 +59,7 @@ public class OJSequenceInspector extends Editor {
 
 		if ( !sequence.playing && GUILayout.Button ( "+", GUILayout.Width ( 32 ), GUILayout.ExpandHeight ( true ) ) ) {
 			currentEditorKeyframe = sequence.AddKeyframe ( currentTime );
+			return;
 		}
 		
 		EditorGUILayout.EndHorizontal ();
@@ -82,6 +83,7 @@ public class OJSequenceInspector extends Editor {
 
 			if ( GUI.Button ( new Rect ( padding - 5 + kf.time * timelineScale, 25.0, 10, 20 ), "" ) ) {
 				currentEditorKeyframe = i;
+				return;
 			}
 		}
 
@@ -103,6 +105,7 @@ public class OJSequenceInspector extends Editor {
 
 			if ( currentEditorKeyframe > -1 && currentEditorKeyframe < sequence.keyframes.Count ) { 
 				kf = sequence.keyframes [ currentEditorKeyframe ];
+				EditorGUILayout.LabelField ( "# " + ( currentEditorKeyframe + 1 ) + " / " + sequence.keyframes.Count );
 				
 				kf.stop = EditorGUILayout.Toggle ( "Stop", kf.stop );
 				kf.time = EditorGUILayout.Slider ( "Time", kf.time, 0, sequence.length );
@@ -173,7 +176,11 @@ public class OJSequenceInspector extends Editor {
 
 	public function OnSceneGUI () {
 		var sequence : OJSequence = target as OJSequence;
-		
+	
+		if ( currentEditorKeyframe >= sequence.keyframes.Count ) {
+			currentEditorKeyframe = 0;
+		}
+
 		if ( sequence.keyframes.Count > 1 ) {
 			for ( var k : int = 1; k < sequence.keyframes.Count; k++ ) {
 				Handles.color = new Color ( 1, 1, 1, 0.5 );
@@ -188,27 +195,28 @@ public class OJSequenceInspector extends Editor {
 					Handles.DrawLine ( p1, p2 );
 				}
 			}
-		}
 		
-		var kf : OJKeyframe = sequence.keyframes [ currentEditorKeyframe ];
-		
-		Handles.color = new Color ( 0, 1, 1, 0.5 );
-		DrawHandles ( sequence, kf );
-	
-		var before : Vector3 = kf.curve.before;
-	       	kf.curve.before = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.before, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
-		
-		var after : Vector3 = kf.curve.after;
-		kf.curve.after = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.after, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
-	
-		if ( kf.curve.symmetrical ) {	
-			if ( before != kf.curve.before ) {
-				kf.MirrorCurveAfter ();
+			var kf : OJKeyframe = sequence.keyframes [ currentEditorKeyframe ];
 			
-			} else if ( after != kf.curve.after ) {
-				kf.MirrorCurveBefore ();
+			Handles.color = new Color ( 0, 1, 1, 0.5 );
+			DrawHandles ( sequence, kf );
+		
+			var before : Vector3 = kf.curve.before;
+			kf.curve.before = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.before, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
 			
+			var after : Vector3 = kf.curve.after;
+			kf.curve.after = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.after, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
+		
+			if ( kf.curve.symmetrical ) {	
+				if ( before != kf.curve.before ) {
+					kf.MirrorCurveAfter ();
+				
+				} else if ( after != kf.curve.after ) {
+					kf.MirrorCurveBefore ();
+				
+				}
 			}
 		}
+		
 	}
 }

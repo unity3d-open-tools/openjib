@@ -99,12 +99,6 @@ public class OJSequence extends MonoBehaviour {
 	  	return p;
 	}	
 	
-	public function SortKeyframes () {
-		keyframes.Sort ( function ( a : OJKeyframe, b : OJKeyframe ) {
-			a.time.CompareTo ( b.time );
-		} );
-	}
-
 	public function Play () {
 		if ( isReady ) {
 			cam.enabled = true;
@@ -119,12 +113,7 @@ public class OJSequence extends MonoBehaviour {
 	public function Reset () {
 		currentTime = 0;
 
-		var kf : OJKeyframe = keyframes [ 0 ];
-	
-		cam.transform.position = transform.position + kf.position;
-		cam.transform.localEulerAngles = kf.rotation;
-
-		for ( kf in keyframes ) {
+		for ( var kf : OJKeyframe in keyframes ) {
 			kf.event.fired = false;
 		}
 	}
@@ -191,18 +180,17 @@ public class OJSequence extends MonoBehaviour {
 			LerpKeyframe ( kf, closest.kf1, closest.kf2, cursor );
 		
 		} else if ( closest.kf1 ) {
-			kf = closest.kf1;
+			//kf = closest.kf1;
 
 		} else if ( closest.kf2 ) {
-			kf = closest.kf2;
+			//kf = closest.kf2;
 
 		}
 
 		kf.time = time;
 		
 		keyframes.Add ( kf );
-		SortKeyframes ();
-		
+
 		// Return the correct index
 		for ( i = 0; i < keyframes.Count; i++ ) {
 			if ( keyframes [ i ].time == time ) {
