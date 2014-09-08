@@ -71,6 +71,7 @@ public class OJSequence extends MonoBehaviour {
 		}
 	}
 
+	public var cameraTag : String = "SequenceCamera";
 	public var autoPlay : boolean = false;	
 	public var rotateAlongCurve : boolean = false;
 	public var keyframes : List.< OJKeyframe > = new List.< OJKeyframe > (); 
@@ -123,13 +124,20 @@ public class OJSequence extends MonoBehaviour {
 			Play ();
 		
 		} else {
-			cam.enabled = false;
-		
+			if ( !cam ) {
+				var go : GameObject = GameObject.FindWithTag ( cameraTag );
+				cam = go.GetComponent.< Camera > ();
+			}
+			
+			if ( cam ) {
+				cam.enabled = false;
+			}
 		}
 	}
 
 	public function Stop () {
 		playing = false;
+		cam.enabled = false;
 	}
 
 	public function Exit () {
@@ -254,7 +262,7 @@ public class OJSequence extends MonoBehaviour {
 			currentTime += Time.deltaTime;
 
 			if ( currentTime > length ) {
-				playing = false;
+				Stop ();
 			
 			} else {			
 				SetTime ( currentTime );
