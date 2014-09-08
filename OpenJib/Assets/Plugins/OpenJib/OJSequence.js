@@ -81,6 +81,10 @@ public class OJSequence extends MonoBehaviour {
 	public var playing : boolean = false;
 	public var eventHandler : GameObject;
 
+	private var fadeTex : Texture2D;	
+	private var fadePlane : GameObject;
+	private var fadeMaterial : Material; 
+
 	private function get isReady () : boolean {
 		return Application.isPlaying && cam != null && keyframes.Count > 0;
 	}
@@ -163,10 +167,29 @@ public class OJSequence extends MonoBehaviour {
 			cam.transform.localRotation = Quaternion.Lerp ( Quaternion.Euler ( kf1.rotation ), Quaternion.Euler ( kf2.rotation ), t ); 
 		
 		}
+		
+		var alpha : float = 1 - ( Mathf.Lerp ( kf1.brightness, kf2.brightness, t ) );
+		fadeTex.SetPixels ( [ 
+			new Color ( 0, 0, 0, alpha ),
+			new Color ( 0, 0, 0, alpha ),
+			new Color ( 0, 0, 0, alpha ),
+			new Color ( 0, 0, 0, alpha )
+		] );
+		fadeTex.Apply ();
+		
 	}	
 
 	public function SetCamera ( kf : OJKeyframe ) {
 		cam.fieldOfView = kf.fov;
+		
+		fadeTex.SetPixels ( [ 
+			new Color ( 0, 0, 0, 1 - kf.brightness ),
+			new Color ( 0, 0, 0, 1 - kf.brightness ),
+			new Color ( 0, 0, 0, 1 - kf.brightness ),
+			new Color ( 0, 0, 0, 1 - kf.brightness )
+		] );
+		fadeTex.Apply ();
+		
 		cam.transform.position = transform.position + kf.position;
 		cam.transform.localRotation = Quaternion.Euler ( kf.rotation );
 	}
@@ -237,6 +260,31 @@ public class OJSequence extends MonoBehaviour {
 	}
 
 	public function SetTime ( time : float ) {
+		if ( !fadePlane ) {
+			fadePlane = GameObject.CreatePrimitive ( PrimitiveType.Quad );
+			fadePlane.transform.parent = cam.transform;
+			fadePlane.transform.localPosition = new Vector3 ( 0, 0, cam.nearClipPlane + 0.1 );
+			fadePlane.transform.localEulerAngles = new Vector3 ( 0, 0, 0 );
+
+			fadeTex = new Texture2D ( 2, 2 );
+			fadeTex.SetPixels ( [
+				new Color ( 0, 0, 0, 0 ),
+				new Color ( 0, 0, 0, 0 ),
+				new Color ( 0, 0, 0, 0 ),
+				new Color ( 0, 0, 0, 0 )
+			] );
+			fadeTex.Apply ();
+			
+			fadeMaterial = new Material ( Shader.Find ( "Unlit/Transparent" ) );
+			fadeMaterial.mainTexture = fadeTex;
+			
+			fadePlane.GetComponent.< MeshRenderer > ().material = fadeMaterial;
+		
+		} else {
+			fadePlane.transform.localScale = new Vector3 ( cam.fieldOfView / 60, cam.fieldOfView / 60, cam.fieldOfView / 60 );
+
+		}
+
 		currentTime = time;
 
 		var closest : KeyframePair = FindClosestKeyframes ();
