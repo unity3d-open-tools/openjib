@@ -1,39 +1,43 @@
-﻿#pragma strict
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
-public class OJBehaviour extends MonoBehaviour {
+public class OJBehaviour : MonoBehaviour {
+	[System.Serializable]
 	public class FloatRange {
-		public var min : float;
-		public var max : float;
+		public float min;
+		public float max;
 	}
 	
+	[System.Serializable]
 	public class Vector3Range {
-		public var min : Vector3;
-		public var max : Vector3;
+		public Vector3 min;
+		public Vector3 max;
 	}
 
-	public var cam : Camera;
-	public var autoPlay : boolean = false;
-	public var autoEdit : boolean = true;
-	public var smoothStep : boolean = false;
-	public var focus : List.< Transform > = new List.< Transform > ();
-	public var focusOffset : Vector3;
-	public var orbit : float;
-	public var position : Vector3Range;
-	public var rotation : Vector3Range;
-	public var duration : float = 5;
-	public var playing : boolean = false;
+	public Camera cam;
+	public bool autoPlay = false;
+	public bool autoEdit = true;
+	public bool smoothStep = false;
+	public List< Transform > focus = new List< Transform > ();
+	public Vector3 focusOffset;
+	public float orbit;
+	public Vector3Range position;
+	public Vector3Range rotation;
+	public float duration = 5;
+	public bool playing = false;
 
-	private var timer : float;
+	private float timer;
 
-	public function Start () {
+	public void Start () {
 		playing = autoPlay;
 	}
 
-	public function NextShot () {
+	public void NextShot () {
 		NextShot ( duration );
 	}
 
-	public function NextShot ( duration : float ) {
+	public void NextShot ( float duration ) {
 		this.duration = duration;
 
 		cam.transform.position = new Vector3 (
@@ -49,7 +53,7 @@ public class OJBehaviour extends MonoBehaviour {
 		timer = 0;
 	}
 
-	public function Update () {
+	public void Update () {
 		if ( !cam ) {
 			return;
 		
@@ -62,13 +66,15 @@ public class OJBehaviour extends MonoBehaviour {
 			NextShot ();
 		}
 
-		var t : float = timer / duration;
+		float t = timer / duration;
 
 		if ( focus.Count > 0 ) {
-			var focusCenter : Vector3;
+			Vector3 focusCenter = Vector3.zero;
 
 			if ( focus.Count > 1 ) {
-				for ( var i : int = 0; i < focus.Count; i++ ) {
+				int i = 0;
+				
+				for ( i = 0; i < focus.Count; i++ ) {
 					focusCenter += focus[i].position;
 				}
 

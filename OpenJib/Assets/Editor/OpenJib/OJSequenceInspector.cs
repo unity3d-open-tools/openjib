@@ -1,18 +1,20 @@
-#pragma strict
+using UnityEngine;
+using UnityEditor;
+using System.Collections;
 
-@CustomEditor ( OJSequence )
-public class OJSequenceInspector extends Editor {
-	private static var currentEditorTime : float;
-	private static var currentEditorKeyframe : int;
-	private static var timelineScale : float = 20;
+[CustomEditor (typeof(OJSequence))]
+public class OJSequenceInspector : Editor {
+	private static float currentEditorTime;
+	private static int currentEditorKeyframe;
+	private static float timelineScale = 20;
 
-	override function OnInspectorGUI () {
-		var sequence : OJSequence = target as OJSequence;
-		var padding : float = 10;
-		var currentTime : float = sequence.playing ? sequence.currentTime : currentEditorTime;
+	public override void OnInspectorGUI () {
+		OJSequence sequence = (OJSequence) target;
+		float padding = 10;
+		float currentTime = sequence.playing ? currentEditorTime : sequence.currentTime;
 
-		sequence.cam = EditorGUILayout.ObjectField ( "Camera", sequence.cam, typeof ( Camera ), true ) as Camera;
-		sequence.eventHandler = EditorGUILayout.ObjectField ( "Event handler", sequence.eventHandler, typeof ( GameObject ), true ) as GameObject;
+		sequence.cam = (Camera) EditorGUILayout.ObjectField ( "Camera", sequence.cam, typeof ( Camera ), true );
+		sequence.eventHandler = (GameObject) EditorGUILayout.ObjectField ( "Event handler", sequence.eventHandler, typeof ( GameObject ), true );
 
 		if ( !sequence.cam ) {
 			EditorGUILayout.LabelField ( "Please link a camera first" );
@@ -55,7 +57,7 @@ public class OJSequenceInspector extends Editor {
 		
 		GUILayout.Box ( "", GUILayout.Height ( 50 ), GUILayout.ExpandWidth ( true ) );
 		
-		var rect : Rect = GUILayoutUtility.GetLastRect ();
+		Rect rect = GUILayoutUtility.GetLastRect ();
 
 		if ( !sequence.playing && GUILayout.Button ( "+", GUILayout.Width ( 32 ), GUILayout.ExpandHeight ( true ) ) ) {
 			currentEditorKeyframe = sequence.AddKeyframe ( currentTime );
@@ -66,7 +68,7 @@ public class OJSequenceInspector extends Editor {
 
 		GUI.BeginScrollView ( rect, new Vector2 ( currentTime * timelineScale, 0 ), new Rect ( 0, 0, padding * 2 + sequence.length * timelineScale, 20 ), GUIStyle.none, GUIStyle.none );
 		
-		for ( var s : int = 0; s <= sequence.length; s++ ) {
+		for ( int s = 0; s <= sequence.length; s++ ) {
 			GUI.Label ( new Rect ( padding - 5 + s * timelineScale, 0, 20, 14 ), s.ToString() );
 		}
 
@@ -76,12 +78,12 @@ public class OJSequenceInspector extends Editor {
 
 		GUI.Box ( new Rect ( padding + currentTime * timelineScale, 20, 2, 30 ), "" );
 
-		for ( var i : int = 0; i < sequence.keyframes.Count; i++ ) {
-			var kf : OJKeyframe = sequence.keyframes [ i ];
+		for ( int i = 0; i < sequence.keyframes.Count; i++ ) {
+			OJKeyframe kf = sequence.keyframes [ i ];
 
 			GUI.color = i == currentEditorKeyframe ? Color.green : Color.white;
 
-			if ( GUI.Button ( new Rect ( padding - 5 + kf.time * timelineScale, 25.0, 10, 20 ), "" ) ) {
+			if ( GUI.Button ( new Rect ( padding - 5f + kf.time * timelineScale, 25.0f, 10f, 20f ), "" ) ) {
 				currentEditorKeyframe = i;
 				return;
 			}
@@ -104,7 +106,7 @@ public class OJSequenceInspector extends Editor {
 			EditorGUILayout.Space ();
 
 			if ( currentEditorKeyframe > -1 && currentEditorKeyframe < sequence.keyframes.Count ) { 
-				kf = sequence.keyframes [ currentEditorKeyframe ];
+				OJKeyframe kf = sequence.keyframes [ currentEditorKeyframe ];
 				EditorGUILayout.LabelField ( "# " + ( currentEditorKeyframe + 1 ) + " / " + sequence.keyframes.Count );
 				
 				kf.stop = EditorGUILayout.Toggle ( "Stop", kf.stop );
@@ -114,8 +116,8 @@ public class OJSequenceInspector extends Editor {
 				
 				// Event
 				EditorGUILayout.LabelField ( "Event", EditorStyles.boldLabel );
-				kf.event.message = EditorGUILayout.TextField ( "Message", kf.event.message );
-				kf.event.argument = EditorGUILayout.TextField ( "Argument", kf.event.argument );
+				kf.evt.message = EditorGUILayout.TextField ( "Message", kf.evt.message );
+				kf.evt.argument = EditorGUILayout.TextField ( "Argument", kf.evt.argument );
 
 				EditorGUILayout.Space ();
 				
@@ -142,7 +144,7 @@ public class OJSequenceInspector extends Editor {
 			
 				// Properties	
 				EditorGUILayout.LabelField ( "Properties", EditorStyles.boldLabel );
-				kf.fov = EditorGUILayout.Slider ( "FOV", kf.fov, 1, 179 );
+				kf.fov = (int)EditorGUILayout.Slider ( "FOV", kf.fov, 1, 179 );
 				kf.brightness = EditorGUILayout.Slider ( "Brightness", kf.brightness, 0, 1 );
 				
 				// Actions
@@ -164,7 +166,7 @@ public class OJSequenceInspector extends Editor {
 		}
 	}
 
-	private function DrawHandles ( sequence : OJSequence, kf : OJKeyframe ) {
+	private void DrawHandles ( OJSequence sequence, OJKeyframe kf ) {
 		if ( kf.curve.before != Vector3.zero ) {
 			Handles.DrawLine ( sequence.transform.position + kf.position, sequence.transform.position + kf.position + kf.curve.before );
 		}
@@ -174,37 +176,37 @@ public class OJSequenceInspector extends Editor {
 		}
 	}
 
-	public function OnSceneGUI () {
-		var sequence : OJSequence = target as OJSequence;
+	public void OnSceneGUI () {
+		OJSequence sequence = (OJSequence) target;
 	
 		if ( currentEditorKeyframe >= sequence.keyframes.Count ) {
 			currentEditorKeyframe = 0;
 		}
 
 		if ( sequence.keyframes.Count > 1 ) {
-			for ( var k : int = 1; k < sequence.keyframes.Count; k++ ) {
-				Handles.color = new Color ( 1, 1, 1, 0.5 );
+			for ( int k = 1; k < sequence.keyframes.Count; k++ ) {
+				Handles.color = new Color ( 1f, 1f, 1f, 0.5f );
 
-				var kf1 : OJKeyframe = sequence.keyframes [ k - 1 ];
-				var kf2 : OJKeyframe = sequence.keyframes [ k ];
+				OJKeyframe kf1 = sequence.keyframes [ k - 1 ];
+				OJKeyframe kf2 = sequence.keyframes [ k ];
 
-				for ( var t : float = 0.05; t <= 1.05; t += 0.05 ) {
-					var p1 : Vector3 = OJSequence.CalculateBezierPoint ( t - 0.05, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
-					var p2 : Vector3 = OJSequence.CalculateBezierPoint ( t, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
+				for ( float t = 0.05f; t <= 1.05f; t += 0.05f ) {
+					Vector3 p1 = OJSequence.CalculateBezierPoint ( t - 0.05f, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
+					Vector3 p2 = OJSequence.CalculateBezierPoint ( t, sequence.transform.position + kf1.position, sequence.transform.position + kf1.position + kf1.curve.after, sequence.transform.position + kf2.position + kf2.curve.before, sequence.transform.position + kf2.position );
 					
 					Handles.DrawLine ( p1, p2 );
 				}
 			}
 		
-			var kf : OJKeyframe = sequence.keyframes [ currentEditorKeyframe ];
+			OJKeyframe kf = sequence.keyframes [ currentEditorKeyframe ];
 			
-			Handles.color = new Color ( 0, 1, 1, 0.5 );
+			Handles.color = new Color ( 0f, 1f, 1f, 0.5f );
 			DrawHandles ( sequence, kf );
 		
-			var before : Vector3 = kf.curve.before;
+			Vector3 before = kf.curve.before;
 			kf.curve.before = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.before, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
 			
-			var after : Vector3 = kf.curve.after;
+			Vector3 after = kf.curve.after;
 			kf.curve.after = Handles.PositionHandle ( sequence.transform.position + kf.position + kf.curve.after, Quaternion.Euler ( Vector3.zero ) ) - kf.position - sequence.transform.position;
 		
 			if ( kf.curve.symmetrical ) {	
