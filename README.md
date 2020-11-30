@@ -13,4 +13,4 @@ As with many other plugins in the asset store, the best ones are needlessly pric
 [![demo](https://raw.githubusercontent.com/mrzapp/openjib/master/Images/webdemo.jpg)](https://rawgit.com/mrzapp/openjib/master/Build/Build.html)
 
 ### License
-<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">
+MIT
